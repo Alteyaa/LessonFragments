@@ -1,63 +1,63 @@
 package com.geektech.lessonfragments;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity implements IFragmentInterface{
+public class MainActivity extends AppCompatActivity {
 
-    Button btnReplace;
+
+    private String text;
+
+
+    public static final int REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnReplace = findViewById(R.id.btnReplace);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
 
-        transaction.add(R.id.second_container,SecondFragment.newInstance("",""));
-        transaction.addToBackStack(null);
+        Bundle bundle = new Bundle();
+
+        if (text !=null){
+            bundle.putString("task",text);
+        }
+
+        FirstFragment fragment = new FirstFragment();
+        fragment.setArguments(bundle);
+        transaction.replace(R.id.first_container,fragment);
         transaction.commit();
-
-//
-//        btnReplace.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//           FragmentManager manager = getSupportFragmentManager();
-//                FragmentTransaction transaction = manager.beginTransaction();
-//                transaction.replace(R.id.second_container,FirstFragment.newInstance("",""));
-//                transaction.addToBackStack(null);
-//                transaction.commit();
-//
-//         FragmentManager manager2 = getSupportFragmentManager();
-//                FragmentTransaction transaction2 = manager2.beginTransaction();
-//                transaction2.replace(R.id.first_container,SecondFragment.newInstance("",""));
-//                transaction2.addToBackStack(null);
-//                transaction2.commit();
-//            }
-//        });
-
     }
 
-    @Override
-    public void sendNews(String text) {
-        FragmentManager manager = getSupportFragmentManager();
-        FirstFragment fragment = (FirstFragment) manager.findFragmentById(R.id.first_container);
-        fragment.openNews(text);
+    public void openSecondActivity(){
+        Intent intent = new Intent(this,SecondActivity.class);
+        startActivityForResult(intent,REQUEST_CODE);
     }
 
+
     @Override
-    public void sendNewsDesc(String text) {
-        FragmentManager manager = getSupportFragmentManager();
-        SecondFragment fragment = (SecondFragment) manager.findFragmentById(R.id.second_container);
-        fragment.resultDesc(text);
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_CODE && resultCode == RESULT_OK){
+
+            text = data.getStringExtra("task");
+
+
+        }
     }
 }

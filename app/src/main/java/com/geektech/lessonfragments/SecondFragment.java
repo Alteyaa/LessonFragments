@@ -30,6 +30,7 @@ public class SecondFragment extends Fragment {
 
     public static SecondFragment newInstance(String param1, String param2) {
         SecondFragment fragment = new SecondFragment();
+
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -57,12 +58,20 @@ public class SecondFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         txtDescription = view.findViewById(R.id.txtView_second);
+
         btnSend = view.findViewById(R.id.btnSend);
+
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((Button) getActivity().findViewById(R.id.btnReplace)).setText("Hello from Second Fragment");
+
+             String message = txtDescription.getText().toString();
+
+             SecondActivity activity = (SecondActivity) getActivity();
+
+             activity.sendResult(message);
+
             }
         });
     }

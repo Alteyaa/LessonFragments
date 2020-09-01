@@ -16,7 +16,7 @@ import android.widget.TextView;
 public class FirstFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -33,7 +33,7 @@ public class FirstFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        listener = (IFragmentInterface) context;
+
     }
 
     public FirstFragment() {
@@ -41,11 +41,10 @@ public class FirstFragment extends Fragment {
     }
 
 
-    public static FirstFragment newInstance(String param1, String param2) {
+    public static FirstFragment newInstance(int page) {
         FirstFragment fragment = new FirstFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ARG_PARAM1, page);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,8 +53,10 @@ public class FirstFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+
+            mParam1 = getArguments().getString("task");
             mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
@@ -70,29 +71,26 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         txtNews = view.findViewById(R.id.txtView_first);
         btnOpenNews = view.findViewById(R.id.open_btn);
+
+        txtNews.setText(mParam1);
 
         btnOpenNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.sendNews("Цифра дня. 179 тысяч 707 звонков поступило за все время в кол-центр 118");
-            }
-        });
 
-        txtNews.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.sendNewsDesc("По ее данным, «Линия самодиагностики — 118»" +
-                        " запущена 6 апреля мэрией Бишкека совместно с Минздравом КР, " +
-                        "Городским управлением здравоохранения, Фондом «Сорос-Кыргызстан»," +
-                        " ОАО «Кыргызтелеком» и швейцарским проектом «Реформы медицинского образования»");
+             MainActivity activity = (MainActivity) getActivity();
+
+             activity.openSecondActivity();
+
             }
         });
 
     }
 
-    public void openNews(String text){
-        txtNews.setText(text);
+    public void openNews(String position) {
+        txtNews.setText(position);
     }
 }
